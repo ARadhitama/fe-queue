@@ -14,6 +14,7 @@ function SignupPage() {
   const [province, setProvince] = useState('');
   const [city, setCity] = useState('');
   const [owner, setOwner] = useState('');
+  const [error, setError] = useState('');
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -76,7 +77,7 @@ function SignupPage() {
           setError('');
           navigate('/login');
         } else {
-            console.log(response.request)
+          setError('Invalid params')
         }
       } catch (error) {
         console.log(error)
@@ -168,6 +169,7 @@ function SignupPage() {
               <option value="serviceUser">Service User</option>
              </select>
             </div>
+            {error && <p className="text-center text-sm text-red-500">{error}</p>}
             <div>
              <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign Up</button>
             </div>
