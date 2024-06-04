@@ -29,7 +29,7 @@ function CategoryPage() {
       <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-lg xl:max-w-3xl">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
           {categoryData.map((category) => (
-            <Link key={category.name} to={`/category/${category.name.toLowerCase()}`}>
+            <Link key={category.name} to={`/category/?category=${category.name.toLowerCase()}`}>
               <div className="bg-white overflow-hidden shadow rounded-lg cursor-pointer xl:h-80">
                 <div className="flex flex-col items-center justify-center h-80">
                   <div className="h-32 w-full flex items-center justify-center">
