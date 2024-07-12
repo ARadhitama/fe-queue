@@ -27,7 +27,9 @@ function App() {
         }
       }
     })();
-  }, [navigate]);
+
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Layout user={user}>
