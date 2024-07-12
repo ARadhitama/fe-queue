@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import Category from './pages/User/Category';
+import Category from './pages/Category';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ServicePage from './pages/Service';
+import QueuePage from './pages/Queue';
 
 import Layout from './components/layout';
 
@@ -12,9 +14,11 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/signup" element={<Signup />} />
-          <Route exact path="/category" element={<Category />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/category" element={<Category />} />
+          <Route path="/service/:category" element={<ServicePage />} />
+          <Route path="/queue" element={<QueuePage />} />
         </Routes>
       </Layout>
     </Router>

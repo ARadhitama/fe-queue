@@ -58,3 +58,42 @@ export const getCategories = async () => {
     throw error.response.data;
   }
 };
+
+export const getServicesByCategory = async (category) => {
+  try {
+    const { data } = await axios.post(
+      `/api/services/?category=${category}`,
+      {},
+    );
+    return data.services;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const getServiceDetail = async (service_id) => {
+  try {
+    const { data } = await axios.post(`/api/service_detail/`, { service_id });
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const createQueue = async (service_id) => {
+  try {
+    const { data } = await axios.post(`/api/queue/`, { service_id });
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const checkQueue = async () => {
+  try {
+    const { data } = await axios.get(`/api/check_queue/`);
+    return data.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};

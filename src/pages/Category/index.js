@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
-import { useAuth } from '../../../components/layout';
+import { useAuth } from '../../components/layout';
 
-import { getCategories } from '../../../services';
+import { getCategories } from '../../services';
 
 function CategoryPage() {
   const [categoryData, setCategoryData] = useState([]);
@@ -17,7 +18,7 @@ function CategoryPage() {
         const categories = await getCategories();
         setCategoryData(categories);
       } catch (error) {
-        console.log(error);
+        toast.error(error.message);
       }
     };
 
@@ -25,7 +26,7 @@ function CategoryPage() {
   }, [user]);
 
   return (
-    <div className="flex min-h-full w-full flex-col justify-center px-6 py-4 lg:px-8">
+    <div className="flex min-h-full w-full flex-col px-6 py-4 lg:px-8">
       <h1 className="text-gray-900 mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
         Categories
       </h1>
@@ -34,7 +35,7 @@ function CategoryPage() {
           {categoryData.map((category) => (
             <Link
               key={category.name}
-              to={`/service/?category=${category.name.toLowerCase()}`}
+              to={`/service/${category.name.toLowerCase()}`}
             >
               <div className="bg-white cursor-pointer overflow-hidden rounded-lg shadow xl:h-80">
                 <div className="flex h-80 flex-col items-center justify-center">

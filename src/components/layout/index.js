@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 
 import Navbar from './Navbar';
 
@@ -17,7 +18,7 @@ function Layout({ children }) {
   const [user, setUser] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (user) return;
@@ -26,19 +27,28 @@ function Layout({ children }) {
       try {
         const user = await checkLogin();
         setUser(user);
-        navigate('/category');
+
+        const excludedRoutes = ['/service', '/queue'];
+        if (!excludedRoutes.some((route) => pathname.startsWith(route))) {
+          navigate('/category');
+        }
       } catch (error) {
-        if (location.pathname !== '/login' && location.pathname !== '/signup') {
+        if (pathname !== '/login' && pathname !== '/signup') {
           navigate('/login');
         }
       }
     };
 
     authenticateUser();
-  }, [user, navigate, location.pathname]);
+  }, [user, navigate, pathname]);
 
   return (
     <AuthContext.Provider value={{ user }}>
+      <Toaster
+        position="top-right"
+        richColors
+        toastOptions={{ duration: 2000 }}
+      />
       <Navbar user={user} handleLogout={handleLogout} />
       <main className="mx-auto flex min-h-[90vh] max-w-4xl grow">
         {children}
