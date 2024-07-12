@@ -49,3 +49,12 @@ export const getCities = async (province) => {
     throw error.response.data;
   }
 };
+
+export const getCategories = async () => {
+  try {
+    const { data } = await axios.get('/api/category/');
+    return data.Category;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
