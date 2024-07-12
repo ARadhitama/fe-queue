@@ -35,7 +35,7 @@ function Layout({ children }) {
     };
 
     authenticateUser();
-  }, [navigate, location.pathname]);
+  }, [user, navigate, location.pathname]);
 
   return (
     <AuthContext.Provider value={{ user }}>
