@@ -125,6 +125,24 @@ export const deleteService = async (service_id) => {
   }
 };
 
+export const openService = async (service_id) => {
+  try {
+    const { data } = await axios.post(`/api/open_service/`, { service_id });
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const closeService = async (service_id) => {
+  try {
+    const { data } = await axios.post(`/api/close_service/`, { service_id });
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
 export const checkQueue = async () => {
   try {
     const { data } = await axios.get(`/api/check_queue/`);

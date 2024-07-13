@@ -25,8 +25,9 @@ function ServicePage() {
     setServiceDetailId(false);
   };
 
-  const handleClickService = async (id) => {
+  const handleClickService = async (id, isOpen) => {
     setServiceDetailId(id);
+    setIsServiceOpen(isOpen);
     setIsModalOpen(true);
   };
 
@@ -39,6 +40,7 @@ function ServicePage() {
 
   const [serviceData, setServiceData] = useState([]);
   const [serviceDetailId, setServiceDetailId] = useState(false);
+  const [isServiceOpen, setIsServiceOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { user } = useAuth();
@@ -79,7 +81,9 @@ function ServicePage() {
             <div
               key={service.service_id}
               className="bg-white h-60 cursor-pointer overflow-hidden rounded-lg shadow"
-              onClick={() => handleClickService(service.service_id)}
+              onClick={() =>
+                handleClickService(service.service_id, service.is_open)
+              }
             >
               <div className="flex h-full flex-col items-center justify-center">
                 <div className="flex h-32 w-full items-center justify-center">
@@ -89,9 +93,18 @@ function ServicePage() {
                     className="h-full object-cover"
                   />
                 </div>
-                <h2 className="text-gray-900 mt-4 text-center text-lg font-medium">
+                <h2 className="text-gray-900 mb-2 mt-4 text-center text-lg font-medium">
                   {service.service_name}
                 </h2>
+                {service.is_open ? (
+                  <span className="bg-indigo-50 text-indigo-700 ring-indigo-700/10 inline-flex items-center rounded-md px-2 text-xs font-medium ring-1 ring-inset">
+                    Open
+                  </span>
+                ) : (
+                  <span className="bg-pink-50 text-pink-700 ring-pink-700/10 inline-flex items-center rounded-md px-2 text-xs font-medium ring-1 ring-inset">
+                    Closed
+                  </span>
+                )}
               </div>
             </div>
           ))}
@@ -99,6 +112,7 @@ function ServicePage() {
       </div>
       <ModalService
         serviceId={serviceDetailId}
+        isServiceOpen={isServiceOpen}
         isModalOpen={isModalOpen}
         handleCloseModal={handleCloseModal}
         fetchServices={fetchServices}

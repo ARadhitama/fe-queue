@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { useAuth } from '../../components/layout';
 
 import {
+  closeService,
   createQueue,
   createService,
   deleteService,
@@ -18,6 +19,7 @@ import {
   getCities,
   getProvinces,
   getServiceDetail,
+  openService,
   updateService,
 } from '../../services';
 
@@ -97,6 +99,19 @@ function ModalService(props) {
     }
   };
 
+  const handleChangeStatusService = async () => {
+    try {
+      isServiceOpen
+        ? await closeService(serviceId)
+        : await openService(serviceId);
+      await fetchServices();
+      handleCloseModal();
+      toast.success('Update successfull');
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const handleExternalSubmit = () => {
     formRef.current.requestSubmit();
   };
@@ -122,7 +137,13 @@ function ModalService(props) {
     return '';
   };
 
-  const { serviceId, isModalOpen, handleCloseModal, fetchServices } = props;
+  const {
+    serviceId,
+    isServiceOpen,
+    isModalOpen,
+    handleCloseModal,
+    fetchServices,
+  } = props;
 
   const navigate = useNavigate();
 
@@ -146,16 +167,25 @@ function ModalService(props) {
         const service = await getServiceDetail(serviceId);
 
         for (const [key, value] of Object.entries(service)) {
+          let newValue = value;
+
+          if (key === 'category_id') {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            if (!isOwner) {
+              newValue = service['category_name'];
+            }
+          }
+
           if (key === 'province') {
-            const cities = await getCities(value);
+            const cities = await getCities(newValue);
             setCityData(cities);
-            // sleep
             await new Promise((resolve) => setTimeout(resolve, 100));
           }
 
           const inputElement = formRef.current.querySelector(`[name="${key}"]`);
           if (inputElement) {
-            inputElement.value = value;
+            inputElement.value = newValue;
           }
         }
       } catch (error) {
@@ -421,6 +451,15 @@ function ModalService(props) {
                   className="bg-red-600 text-white hover:bg-red-500 ring-gray-300 ml-2 w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset"
                 >
                   Delete
+                </button>
+              )}
+              {modalType === 'update' && (
+                <button
+                  type="button"
+                  onClick={handleChangeStatusService}
+                  className="bg-green-600 text-white hover:bg-green-500 ring-gray-300 ml-2 w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset"
+                >
+                  {isServiceOpen ? 'Close' : 'Open'}
                 </button>
               )}
               <button
