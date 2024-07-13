@@ -28,7 +28,7 @@ function Layout({ children }) {
         const user = await checkLogin();
         setUser(user);
 
-        const excludedRoutes = ['/service', '/queue'];
+        const excludedRoutes = ['/service', '/queue', '/history'];
         if (!excludedRoutes.some((route) => pathname.startsWith(route))) {
           if (user.is_owner) {
             navigate('/service');

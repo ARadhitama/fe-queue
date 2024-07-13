@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { useAuth } from '../../components/layout';
+import Breadcrumb from '../../components/breadcrumb';
 import ModalService from './Modal';
 
 import { getMyServices, getServicesByCategory } from '../../services';
@@ -60,8 +61,9 @@ function ServicePage() {
   }
 
   return (
-    <div className="flex min-h-full w-full flex-col py-10">
-      <div className="relative flex items-center justify-center">
+    <div className="flex min-h-full w-full flex-col pb-10 pt-7">
+      {!isOwner && <Breadcrumb label="Services" />}
+      <div className="relative mt-5 flex items-center justify-center">
         <h1 className="text-gray-900 text-center text-2xl font-bold leading-9 tracking-tight">
           Services
         </h1>

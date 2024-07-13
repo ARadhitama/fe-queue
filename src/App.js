@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ServicePage from './pages/Service';
 import QueuePage from './pages/Queue';
+import HistoryPage from './pages/History';
 
 import Layout from './components/layout';
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/service" element={<ServicePage />} />
           <Route path="/service/:category" element={<ServicePage />} />
           <Route path="/queue" element={<QueuePage />} />
+          <Route path="/history" element={<HistoryPage />} />
         </Routes>
       </Layout>
     </Router>

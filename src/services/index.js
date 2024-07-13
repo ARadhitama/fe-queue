@@ -89,15 +89,6 @@ export const getServiceDetail = async (service_id) => {
   }
 };
 
-export const createQueue = async (service_id) => {
-  try {
-    const { data } = await axios.post(`/api/queue/`, { service_id });
-    return data;
-  } catch (error) {
-    throw error.response.data;
-  }
-};
-
 export const createService = async (payload) => {
   try {
     const { data } = await axios.post(`/api/create_service/`, payload);
@@ -143,10 +134,37 @@ export const closeService = async (service_id) => {
   }
 };
 
+export const createQueue = async (service_id) => {
+  try {
+    const { data } = await axios.post(`/api/queue/`, { service_id });
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
 export const checkQueue = async () => {
   try {
     const { data } = await axios.get(`/api/check_queue/`);
     return data.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const cancelQueue = async () => {
+  try {
+    const { data } = await axios.get(`/api/cancel_queue/`);
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const getHistories = async () => {
+  try {
+    const { data } = await axios.get(`/api/history/`);
+    return data.history;
   } catch (error) {
     throw error.response.data;
   }

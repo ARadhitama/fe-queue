@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import { History, Logs, LogOut } from 'lucide-react';
+
 function Navbar({ user, handleLogout }) {
   return (
     <nav className="bg-gray-800 sticky top-0 z-10 flex h-[10vh] w-full items-center pb-1">
@@ -14,11 +16,18 @@ function Navbar({ user, handleLogout }) {
               <div className="text-white mr-10">
                 {user.username} | {user.is_owner ? 'Owner' : 'User'}
               </div>
-              <button
-                className="text-red-400 text-2xl font-bold"
-                onClick={handleLogout}
-              >
-                ➡
+              <button className="mr-6 h-5 w-5">
+                <Link to="/history">
+                  <History className="text-white h-full w-full" />
+                </Link>
+              </button>
+              <button className="mr-10 h-5 w-5">
+                <Link to="/queue">
+                  <Logs className="text-white h-full w-full" />
+                </Link>
+              </button>
+              <button className="h-5 w-5" onClick={handleLogout}>
+                <LogOut className="text-white h-full w-full" />
               </button>
             </>
           )}
