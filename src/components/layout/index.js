@@ -30,7 +30,11 @@ function Layout({ children }) {
 
         const excludedRoutes = ['/service', '/queue'];
         if (!excludedRoutes.some((route) => pathname.startsWith(route))) {
-          navigate('/category');
+          if (user.is_owner) {
+            navigate('/service');
+          } else {
+            navigate('/category');
+          }
         }
       } catch (error) {
         if (pathname !== '/login' && pathname !== '/signup') {
@@ -45,7 +49,7 @@ function Layout({ children }) {
   return (
     <AuthContext.Provider value={{ user }}>
       <Toaster
-        position="top-right"
+        position="top-center"
         richColors
         toastOptions={{ duration: 2000 }}
       />

@@ -32,6 +32,15 @@ export const signup = async (payload) => {
   }
 };
 
+export const getCategories = async () => {
+  try {
+    const { data } = await axios.get('/api/category/');
+    return data.Category;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
 export const getProvinces = async () => {
   try {
     const { data } = await axios.get('/api/province/');
@@ -50,10 +59,10 @@ export const getCities = async (province) => {
   }
 };
 
-export const getCategories = async () => {
+export const getMyServices = async () => {
   try {
-    const { data } = await axios.get('/api/category/');
-    return data.Category;
+    const { data } = await axios.get('/api/owned_services/');
+    return data;
   } catch (error) {
     throw error.response.data;
   }
@@ -83,6 +92,33 @@ export const getServiceDetail = async (service_id) => {
 export const createQueue = async (service_id) => {
   try {
     const { data } = await axios.post(`/api/queue/`, { service_id });
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const createService = async (payload) => {
+  try {
+    const { data } = await axios.post(`/api/create_service/`, payload);
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const updateService = async (payload) => {
+  try {
+    const { data } = await axios.post(`/api/edit_service/`, payload);
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const deleteService = async (service_id) => {
+  try {
+    const { data } = await axios.post(`/api/delete_service/`, { service_id });
     return data;
   } catch (error) {
     throw error.response.data;
