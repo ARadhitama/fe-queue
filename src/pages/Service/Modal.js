@@ -465,7 +465,7 @@ function ModalService(props) {
               <button
                 type="button"
                 onClick={handleExternalSubmit}
-                className="bg-indigo-600 text-white hover:bg-indigo-500 ring-gray-300 ml-2 w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset"
+                className={`${modalType === 'queue' && !isServiceOpen ? 'disabled' : ''} bg-indigo-600 text-white hover:bg-indigo-500 ring-gray-300 ml-2 w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset`}
               >
                 {btnText}
               </button>
