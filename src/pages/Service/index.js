@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -6,16 +6,68 @@ import { useAuth } from '../../components/layout';
 import Breadcrumb from '../../components/breadcrumb';
 import ModalService from './Modal';
 
-import { getMyServices, getServicesByCategory } from '../../services';
+import {
+  getCities,
+  getMyServices,
+  getProvinces,
+  getServicesByCategory,
+} from '../../services';
 
 function ServicePage() {
-  const fetchServices = async () => {
+  const handleChangeProvince = async (event) => {
+    const province = event.target.value;
+
+    if (!province) {
+      await fetchServices(null, null);
+      setCityData([]);
+      return;
+    }
+
+    await fetchServices(province, null);
+
+    const cities = await getCities(province);
+    setCityData(cities);
+  };
+
+  const handleChangeCity = async (event) => {
+    const city = event.target.value;
+
+    let province = '';
+    const formData = new FormData(formRef.current);
+    formData.forEach((value, key) => {
+      if (key === 'province') {
+        province = value;
+      }
+    });
+
+    await fetchServices(province, city);
+  };
+
+  const fetchServices = async (province, city) => {
     try {
       const services = user.is_owner
         ? await getMyServices()
-        : await getServicesByCategory(category);
+        : await getServicesByCategory(category, province, city);
 
       setServiceData(services);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchProvince = async () => {
+    try {
+      const provinces = await getProvinces();
+      setProvinceData(provinces);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const fetchCities = async (province) => {
+    try {
+      const cities = await getCities(province);
+      setCityData(cities);
     } catch (error) {
       toast.error(error.message);
     }
@@ -39,6 +91,10 @@ function ServicePage() {
   const navigate = useNavigate();
   const { category } = useParams();
 
+  const formRef = useRef();
+
+  const [provinceData, setProvinceData] = useState([]);
+  const [cityData, setCityData] = useState([]);
   const [serviceData, setServiceData] = useState([]);
   const [serviceDetailId, setServiceDetailId] = useState(false);
   const [isServiceOpen, setIsServiceOpen] = useState(false);
@@ -51,8 +107,25 @@ function ServicePage() {
   useEffect(() => {
     if (!user) return;
 
-    fetchServices();
+    if (!user.is_owner) {
+      fetchProvince();
+      fetchCities(user.province);
 
+      for (const [key, value] of Object.entries(user)) {
+        if (key === 'province' || key === 'city') {
+          setTimeout(() => {
+            const inputElement = formRef.current.querySelector(
+              `[name="${key}"]`,
+            );
+            if (inputElement) {
+              inputElement.value = value;
+            }
+          }, 100);
+        }
+      }
+    }
+
+    fetchServices(user.province, user.city);
     // eslint-disable-next-line
   }, [user]);
 
@@ -77,7 +150,51 @@ function ServicePage() {
           </button>
         )}
       </div>
-      <div className="mt-5 w-full">
+      {!isOwner && (
+        <form ref={formRef} className="w-full">
+          <div className="mt-5 flex w-full items-center justify-center">
+            <div className="text-gray-700 flex-2 mb-2 mr-5 flex flex-col items-center justify-between text-sm">
+              <label htmlFor="province" className="font-semibold">
+                Province:
+              </label>
+              <select
+                id="province"
+                name="province"
+                required
+                className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 mt-1 block w-48 rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
+                onChange={handleChangeProvince}
+              >
+                <option value="">All Provinces</option>
+                {provinceData.map((province) => (
+                  <option key={province.name} value={province.name}>
+                    {province.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="text-gray-700 flex-2 mb-2 flex flex-col items-center justify-between text-sm">
+              <label htmlFor="city" className="font-semibold">
+                City:
+              </label>
+              <select
+                id="city"
+                name="city"
+                required
+                className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 mt-1 block w-48 rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
+                onChange={handleChangeCity}
+              >
+                <option value="">All Cities</option>
+                {cityData.map((city) => (
+                  <option key={city.name} value={city.name}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </form>
+      )}
+      <div className="mt-7 w-full">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
           {serviceData.map((service, i) => (
             <div

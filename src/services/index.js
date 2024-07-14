@@ -68,12 +68,12 @@ export const getMyServices = async () => {
   }
 };
 
-export const getServicesByCategory = async (category) => {
+export const getServicesByCategory = async (category, province, city) => {
   try {
-    const { data } = await axios.post(
-      `/api/services/?category=${category}`,
-      {},
-    );
+    const { data } = await axios.post(`/api/services/?category=${category}`, {
+      province,
+      city,
+    });
     return data.services;
   } catch (error) {
     throw error.response.data;
