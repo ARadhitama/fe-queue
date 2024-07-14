@@ -19,6 +19,14 @@ function HistoryPage() {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
+  const generateColor = (status) => {
+    if (status === 'accepted') return 'bg-green-100 text-green-800';
+    if (status === 'rejected') return 'bg-red-100 text-red-800';
+    if (status === 'canceled') return 'bg-gray-100 text-gray-800';
+
+    return 'bg-green-100 text-green-800';
+  };
+
   const [isFetched, setIsFetched] = useState(false);
   const [historyData, setHistoryData] = useState([]);
   const { user } = useAuth();
@@ -106,14 +114,16 @@ function HistoryPage() {
                         {history.name}
                       </td>
                       <td className="w-[20%] whitespace-nowrap px-6 py-4">
-                        <span className="bg-green-100 text-green-800 inline-flex rounded-full px-2 text-xs font-semibold leading-5">
-                          {history.status}
-                        </span>
+                        {history.status && (
+                          <span
+                            className={`${generateColor(history.status)} inline-flex rounded-full px-3 py-1 text-xs font-semibold`}
+                          >
+                            {history.status.toUpperCase()}
+                          </span>
+                        )}
                       </td>
                     </tr>
                   ))}
-
-                  {/* More rows can be added here */}
                 </tbody>
               </table>
             </div>
