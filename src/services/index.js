@@ -169,3 +169,26 @@ export const getHistories = async () => {
     throw error.response.data;
   }
 };
+
+export const getMyServiceDetail = async (service_id) => {
+  try {
+    const { data } = await axios.post(`/api/owned_services_details/`, {
+      service_id,
+    });
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+export const processQueue = async (service_id, action) => {
+  try {
+    const { data } = await axios.post(`/api/process_queue/`, {
+      service_id,
+      action,
+    });
+    return data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
