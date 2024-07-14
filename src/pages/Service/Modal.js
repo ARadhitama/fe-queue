@@ -112,7 +112,25 @@ function ModalService(props) {
     }
   };
 
-  const handleExternalSubmit = () => {
+  const handleExternalSubmit = async () => {
+    if (modalType === 'view') {
+      setModalType('update');
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      for (const [key, value] of Object.entries(serviceData)) {
+        if (key === 'category_id') {
+          const inputElement = formRef.current.querySelector(`[name="${key}"]`);
+          inputElement.value = value;
+        }
+
+        if (key === 'province' || key === 'city') {
+          const inputElement = formRef.current.querySelector(`[name="${key}"]`);
+          inputElement.value = value;
+        }
+      }
+      return;
+    }
+
     formRef.current.requestSubmit();
   };
 
@@ -124,13 +142,15 @@ function ModalService(props) {
   };
 
   const setTitle = () => {
+    if (modalType === 'view') return 'View Service';
     if (modalType === 'create') return 'Create Service';
-    if (modalType === 'update') return 'Update Service';
+    if (modalType === 'update') return 'Edit Service';
     if (modalType === 'queue') return '';
     return '';
   };
 
   const setBtnText = () => {
+    if (modalType === 'view') return 'Edit';
     if (modalType === 'create') return 'Create';
     if (modalType === 'update') return 'Update';
     if (modalType === 'queue') return 'Queue';
@@ -172,17 +192,14 @@ function ModalService(props) {
           let newValue = value;
 
           if (key === 'category_id') {
-            await new Promise((resolve) => setTimeout(resolve, 100));
-
-            if (!isOwner) {
-              newValue = service['category_name'];
-            }
+            await new Promise((resolve) => setTimeout(resolve, 50));
+            newValue = service['category_name'];
           }
 
           if (key === 'province') {
             const cities = await getCities(newValue);
             setCityData(cities);
-            await new Promise((resolve) => setTimeout(resolve, 100));
+            await new Promise((resolve) => setTimeout(resolve, 50));
           }
 
           const inputElement = formRef.current.querySelector(`[name="${key}"]`);
@@ -214,7 +231,7 @@ function ModalService(props) {
     };
 
     if (isOwner && serviceId) {
-      setModalType('update');
+      setModalType('view');
       fetchCategories();
       fetchProvinces();
       fetchServiceDetail();
@@ -262,14 +279,16 @@ function ModalService(props) {
                   >
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
                       <label htmlFor="category_id">Category:</label>
-                      {modalType === 'queue' ? (
+                      {modalType === 'view' || modalType === 'queue' ? (
                         <input
                           id="category_id"
                           name="category_id"
                           type="text"
                           required
                           className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                          disabled={modalType === 'queue'}
+                          disabled={
+                            modalType === 'view' || modalType === 'queue'
+                          }
                         />
                       ) : (
                         <select
@@ -277,6 +296,9 @@ function ModalService(props) {
                           name="category_id"
                           required
                           className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
+                          disabled={
+                            modalType === 'view' || modalType === 'queue'
+                          }
                         >
                           <option value="">Select Category</option>
                           {categoryData.map((category) => (
@@ -295,7 +317,7 @@ function ModalService(props) {
                         type="text"
                         required
                         className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                        disabled={modalType === 'queue'}
+                        disabled={modalType === 'view' || modalType === 'queue'}
                       />
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
@@ -306,7 +328,7 @@ function ModalService(props) {
                         type="text"
                         required
                         className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                        disabled={modalType === 'queue'}
+                        disabled={modalType === 'view' || modalType === 'queue'}
                       />
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
@@ -317,7 +339,7 @@ function ModalService(props) {
                         type="text"
                         required
                         className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                        disabled={modalType === 'queue'}
+                        disabled={modalType === 'view' || modalType === 'queue'}
                       />
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
@@ -328,7 +350,7 @@ function ModalService(props) {
                         type="text"
                         required
                         className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                        disabled={modalType === 'queue'}
+                        disabled={modalType === 'view' || modalType === 'queue'}
                       />
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
@@ -339,7 +361,7 @@ function ModalService(props) {
                         type="number"
                         required
                         className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                        disabled={modalType === 'queue'}
+                        disabled={modalType === 'view' || modalType === 'queue'}
                       />
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
@@ -350,7 +372,7 @@ function ModalService(props) {
                         type="time"
                         required
                         className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                        disabled={modalType === 'queue'}
+                        disabled={modalType === 'view' || modalType === 'queue'}
                       />
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
@@ -361,7 +383,7 @@ function ModalService(props) {
                         type="time"
                         required
                         className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                        disabled={modalType === 'queue'}
+                        disabled={modalType === 'view' || modalType === 'queue'}
                       />
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
@@ -372,19 +394,21 @@ function ModalService(props) {
                         type="text"
                         required
                         className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                        disabled={modalType === 'queue'}
+                        disabled={modalType === 'view' || modalType === 'queue'}
                       />
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
                       <label htmlFor="province">Province:</label>
-                      {modalType === 'queue' ? (
+                      {modalType === 'view' || modalType === 'queue' ? (
                         <input
                           id="province"
                           name="province"
                           type="text"
                           required
                           className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                          disabled={modalType === 'queue'}
+                          disabled={
+                            modalType === 'view' || modalType === 'queue'
+                          }
                         />
                       ) : (
                         <select
@@ -393,6 +417,9 @@ function ModalService(props) {
                           onChange={handleChangeProvince}
                           required
                           className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
+                          disabled={
+                            modalType === 'view' || modalType === 'queue'
+                          }
                         >
                           <option value="">Select Province</option>
                           {provinceData.map((province) => (
@@ -405,14 +432,16 @@ function ModalService(props) {
                     </div>
                     <div className="text-gray-700 mb-2 flex w-full items-center justify-between text-sm">
                       <label htmlFor="city">City:</label>
-                      {modalType === 'queue' ? (
+                      {modalType === 'view' || modalType === 'queue' ? (
                         <input
                           id="city"
                           name="city"
                           type="text"
                           required
                           className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                          disabled={modalType === 'queue'}
+                          disabled={
+                            modalType === 'view' || modalType === 'queue'
+                          }
                         />
                       ) : (
                         <select
@@ -420,7 +449,9 @@ function ModalService(props) {
                           name="city"
                           required
                           className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
-                          disabled={modalType === 'queue'}
+                          disabled={
+                            modalType === 'view' || modalType === 'queue'
+                          }
                         >
                           <option value="">Select City</option>
                           {cityData.map((city) => (
@@ -446,7 +477,7 @@ function ModalService(props) {
               >
                 Cancel
               </button>
-              {modalType === 'update' && (
+              {(modalType === 'view' || modalType === 'update') && (
                 <button
                   type="button"
                   onClick={handleDeleteService}
@@ -455,7 +486,7 @@ function ModalService(props) {
                   Delete
                 </button>
               )}
-              {modalType === 'update' && (
+              {(modalType === 'view' || modalType === 'update') && (
                 <>
                   <button
                     type="button"
