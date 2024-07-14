@@ -21,6 +21,7 @@ function App() {
           <Route path="/service" element={<ServicePage />} />
           <Route path="/service/:category" element={<ServicePage />} />
           <Route path="/queue" element={<QueuePage />} />
+          <Route path="/queue/:id" element={<QueuePage />} />
           <Route path="/history" element={<HistoryPage />} />
         </Routes>
       </Layout>

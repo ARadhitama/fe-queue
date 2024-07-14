@@ -13,19 +13,21 @@ function Navbar({ user, handleLogout }) {
         <div className="text-md flex items-center">
           {user && (
             <>
-              <div className="text-white mr-10">
-                {user.username} | {user.is_owner ? 'Owner' : 'User'}
-              </div>
-              <button className="mr-6 h-5 w-5">
-                <Link to="/history">
-                  <History className="text-white h-full w-full" />
-                </Link>
-              </button>
-              <button className="mr-10 h-5 w-5">
-                <Link to="/queue">
-                  <Logs className="text-white h-full w-full" />
-                </Link>
-              </button>
+              <div className="text-white mr-10">{user.username}</div>
+              {!user.is_owner && (
+                <>
+                  <button className="mr-6 h-5 w-5">
+                    <Link to="/history">
+                      <History className="text-white h-full w-full" />
+                    </Link>
+                  </button>
+                  <button className="mr-10 h-5 w-5">
+                    <Link to="/queue">
+                      <Logs className="text-white h-full w-full" />
+                    </Link>
+                  </button>
+                </>
+              )}
               <button className="h-5 w-5" onClick={handleLogout}>
                 <LogOut className="text-white h-full w-full" />
               </button>

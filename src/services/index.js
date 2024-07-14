@@ -175,7 +175,7 @@ export const getMyServiceDetail = async (service_id) => {
     const { data } = await axios.post(`/api/owned_services_details/`, {
       service_id,
     });
-    return data;
+    return Object.keys(data).length === 0 ? null : data;
   } catch (error) {
     throw error.response.data;
   }

@@ -41,8 +41,7 @@ function CategoryPage() {
                 <div className="flex h-full flex-col items-center justify-center">
                   <div className="flex h-32 w-full items-center justify-center">
                     <img
-                      // src={category.image}
-                      src={`https://cdngarenanow-a.akamaihd.net/gstaticid/FF/crystalroyale/poke/${i + 1}.png`}
+                      src={category.image}
                       alt={category.name}
                       className="h-full object-cover"
                     />

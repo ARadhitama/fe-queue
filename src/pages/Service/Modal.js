@@ -149,6 +149,7 @@ function ModalService(props) {
 
   const formRef = useRef();
   const [modalType, setModalType] = useState(false);
+  const [serviceData, setServiceData] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
   const [provinceData, setProvinceData] = useState([]);
   const [cityData, setCityData] = useState([]);
@@ -165,6 +166,7 @@ function ModalService(props) {
     const fetchServiceDetail = async () => {
       try {
         const service = await getServiceDetail(serviceId);
+        setServiceData(service);
 
         for (const [key, value] of Object.entries(service)) {
           let newValue = value;
@@ -433,14 +435,14 @@ function ModalService(props) {
                 </div>
               </div>
             </div>
-            <div className="bg-gray-50 flex items-center justify-end px-6 py-3">
+            <div className="bg-gray-50 relative flex items-center justify-end px-6 py-3">
               <button
                 type="button"
                 data-autofocus
                 onClick={() => {
                   handleCloseModal();
                 }}
-                className="bg-white text-gray-900 ring-gray-300 hover:bg-gray-50 inline-flex w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset"
+                className="bg-white text-gray-900 ring-gray-300 hover:bg-gray-50 absolute left-5 inline-flex w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset"
               >
                 Cancel
               </button>
@@ -454,13 +456,22 @@ function ModalService(props) {
                 </button>
               )}
               {modalType === 'update' && (
-                <button
-                  type="button"
-                  onClick={handleChangeStatusService}
-                  className="bg-green-600 text-white hover:bg-green-500 ring-gray-300 ml-2 w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset"
-                >
-                  {isServiceOpen ? 'Close' : 'Open'}
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={handleChangeStatusService}
+                    className="bg-green-600 text-white hover:bg-green-500 ring-gray-300 ml-2 w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset"
+                  >
+                    {isServiceOpen ? 'Close' : 'Open'}
+                  </button>
+                  <button
+                    type="button"
+                    className={`${serviceData.current_queue_number < 1 ? 'disabled' : ''} bg-green-600 text-white hover:bg-green-500 ring-gray-300 ml-2 w-auto justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset`}
+                    onClick={() => navigate(`/queue/${serviceId}`)}
+                  >
+                    Manage Queue
+                  </button>
+                </>
               )}
               <button
                 type="button"
