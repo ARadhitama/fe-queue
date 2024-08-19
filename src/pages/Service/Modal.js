@@ -462,6 +462,16 @@ function ModalService(props) {
                         </select>
                       )}
                     </div>
+                    <div className={`${isOwner ? 'hidden' : ''} text-gray-700 mb-2 flex w-full items-center justify-between text-sm`}>
+                      <label htmlFor="current_queue_number">Queue:</label>
+                      <input
+                        id="current_queue_number"
+                        name="current_queue_number"
+                        type="text"
+                        className="text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-indigo-500 block w-[80%] rounded-md border-0 px-2 py-1 shadow-sm ring-1 ring-inset focus:ring-1 focus:ring-inset"
+                        disabled={modalType === 'view' || modalType === 'queue'}
+                      />
+                    </div>
                   </form>
                 </div>
               </div>

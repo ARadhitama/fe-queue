@@ -107,10 +107,10 @@ function QueuePage() {
       <Breadcrumb label="Queue" />
       <div className="bg-white mt-6 rounded-lg pb-4 pt-2 shadow">
         <div className="text-gray-900 text-center text-2xl font-bold">
-          Queue Num
+          {isOwner ? "In Queue" : queueData.user_queue_number === 0 ? "": "User ahead in line"}
         </div>
         <div className="text-gray-900 text-center text-6xl font-bold">
-          {isOwner ? serviceData.in_queue : queueData.user_queue_number}
+          {isOwner ? serviceData.in_queue : queueData.user_queue_number === 0 ? "It's Your Turn": queueData.user_queue_number}
         </div>
       </div>
       <div className="bg-white mt-6 flex items-center justify-center rounded-lg py-4 shadow">
